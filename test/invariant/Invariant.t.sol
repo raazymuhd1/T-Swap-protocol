@@ -51,6 +51,7 @@ contract Invariant is StdInvariant, Test {
         // the change in the pool size of WETH should follow this function
         // Dx = (B/(1-B)) * x
         // actual deltaX == Dx = (B/(B-1)) * x
+        // invariants assertions
         assertEq(handler.actualDeltaX(), handler.expectedDeltaX());
     }
 }

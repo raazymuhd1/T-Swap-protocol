@@ -9,8 +9,8 @@ remappings = ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts']
 seed = '0x1'
 
 [invariant]
-runs = 256 # The number of runs that must execute for each invariant test group.
-depth = 32 # The number of calls executed to attempt to break invariants in one run.
+runs = 256 # Number of times that a sequence of function calls is run.
+depth = 32 # Number of function calls made in a single run.
 fail_on_revert = true
 
 [fmt]

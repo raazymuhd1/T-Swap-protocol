@@ -19,12 +19,13 @@ import { IERC20 } from "forge-std/interfaces/IERC20.sol";
 
 contract PoolFactory {
     error PoolFactory__PoolAlreadyExists(address tokenAddress);
+    // @audit-info this custom error is not used 
     error PoolFactory__PoolDoesNotExist(address tokenAddress);
 
     /*//////////////////////////////////////////////////////////////
                             STATE VARIABLES
     //////////////////////////////////////////////////////////////*/
-    mapping(address token => address pool) private s_pools;
+    mapping(address token => address pool) private s_pools; // explain: probably poolToken => poolAddress
     mapping(address pool => address token) private s_tokens;
 
     address private immutable i_wethToken;
@@ -32,18 +33,21 @@ contract PoolFactory {
     /*//////////////////////////////////////////////////////////////
                                  EVENTS
     //////////////////////////////////////////////////////////////*/
+    // @audit-info missing "indexed" keyword
     event PoolCreated(address tokenAddress, address poolAddress);
 
     /*//////////////////////////////////////////////////////////////
                                FUNCTIONS
     //////////////////////////////////////////////////////////////*/
     constructor(address wethToken) {
+        // @audit-info lacking zero address check
         i_wethToken = wethToken;
     }
 
     /*//////////////////////////////////////////////////////////////
                            EXTERNAL FUNCTIONS
     //////////////////////////////////////////////////////////////*/
+    // explain: tokenAddress => weth for a token/weth pool
     function createPool(address tokenAddress) external returns (address) {
         if (s_pools[tokenAddress] != address(0)) {
             revert PoolFactory__PoolAlreadyExists(tokenAddress);

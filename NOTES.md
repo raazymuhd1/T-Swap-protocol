@@ -1,4 +1,4 @@
-<!-- VIDEO STOP AT 11.54.22 -->
+<!-- VIDEO STOP AT 12.19.01 -->
 
 ## Keynote
  - Invariant Test is good when u are on private audit, but its just waste of time for competitive audit
@@ -8,14 +8,18 @@
 
 
 ## Invariants ( also known as stateful fuzzing )
-  - `stateful` fuzzing is where the final state of your previous `(stateless)` run is the starting state of your next run ( basically it will use the same contract, not started from scratch like stateless fuzz )
-  
-**Invariants** A property of our system should always hold
+  - `stateful` fuzzing is where the final state of your previous run on the same function is the starting state of your next run ( basically it will use the same contract, not started from scratch like stateless fuzz ). 
+   `Stateful testing` keeps track of changes made by previous calls, allowing us to test invariants, which are properties of the system that must always hold. This type of testing is different from stateless testing, where the state is discarded after each test. after each function call is performed, all invariants are asserted.
+   In a nutshell, `stateful fuzz` purposes is to check our system `invariant` didn't break. state of the previous run on the same function is not discarded.
+
+  - `invariants` - a property that our system should always hold  
+
+**Invariants** A property of our system should always hold (ex: contract balance should always more than 0)
 - in `foundry.toml` file we can change `runs (the number of times of random input that foundry will try to pass in)` property to whatever number we want (ex: 1000) under `[fuzz]`
 - `invariants / stateful fuzz` test will call all of our function inside our contract randomly and passes a     random data to each one of the function.
 - the function name should starts with `invariant` following by function name.
 - Test contract should be inherited from `StdInvariant` contract provided by foundry.    
-
+- 
 
 ## Resources to learn more about `AMM`
  - [chainlink AMM](https://chain.link/education-hub/what-is-an-automated-market-maker-amm)

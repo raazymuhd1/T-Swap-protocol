@@ -13,7 +13,7 @@ contract Handler is Test {
     address liquidityProvider = makeAddr("LP");
     address swapper = makeAddr("swapper");
 
-    // Ghost Variables (bcoz they dont exist the actual pool contract, only exist in this handler)
+    // Ghost Variables (bcoz they dont exist in the actual pool contract, only exist in this handler)
     int256 public startingX;
     int256 public startingY;
 
