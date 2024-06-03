@@ -7,7 +7,7 @@ import { StdInvariant } from "forge-std/StdInvariant.sol";
 import { ERC20Mock } from "../mocks/ERC20Mock.sol";
 import { PoolFactory } from "../../src/PoolFactory.sol";
 import { TSwapPool } from "../../src/TSwapPool.sol";
-import { Handler } fron "./Handler.t.sol";
+import { Handler } from "./Handler.t.sol";
 
 contract Invariant is StdInvariant, Test {
     ERC20Mock poolToken; // any token u want to deposit on liquidity pool
@@ -23,8 +23,8 @@ contract Invariant is StdInvariant, Test {
     function setUp() public {
         weth = new ERC20Mock();
         poolToken = new ERC20Mock();
-        factory = new PoolFactory();
-        pool = TSwapPool(factory.createPool(address(weth)));
+        factory = new PoolFactory(address(weth));
+        pool = TSwapPool(factory.createPool(address(poolToken)));
 
         // minting the pool token and weth into this contract
         poolToken.mint(address(this), uint256(STARTING_X));
@@ -37,7 +37,7 @@ contract Invariant is StdInvariant, Test {
         // add liquidity by calling deposit function
         pool.deposit(uint256(STARTING_Y), uint256(STARTING_Y), uint256(STARTING_X), uint64(block.timestamp));
 
-        handler = new Handler();
+        handler = new Handler(pool);
         bytes4[] memory selectors = new bytes4[](2);
         selectors[0] = handler.deposit.selector;
         selectors[1] = handler.swapPoolTokenForWethBasedOnOuputWeth.selector;
@@ -51,6 +51,6 @@ contract Invariant is StdInvariant, Test {
         // the change in the pool size of WETH should follow this function
         // Dx = (B/(1-B)) * x
         // actual deltaX == Dx = (B/(B-1)) * x
-        assertEq(handler.actualDeltaX, handler.expectedDeltaX);
+        assertEq(handler.actualDeltaX(), handler.expectedDeltaX());
     }
 }
