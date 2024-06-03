@@ -1,4 +1,7 @@
-<!-- VIDEO STOP AT 10.50 -->
+<!-- VIDEO STOP AT 11.54.22 -->
+
+## Keynote
+ - Invariant Test is good when u are on private audit, but its just waste of time for competitive audit
 
 ## Makefile Docs
     - [Makefile Docs](https://makefiletutorial.com/)

@@ -292,6 +292,20 @@ contract TSwapPool is ERC20 {
         returns (uint256 inputAmount)
     {
         return
+            // (Dx = token x that has changed in amount increased/decresed)
+            // (Dy = token y that has changed in amount increased/decresed)
+                    //  input       output
+            // x * y = (x + Dx) * (y - Dy)  
+            // x * y = (x + Dx) * (y - outputAmount) 
+            // x * y = x*y - x*outputAmount + Dx*y - Dx*outputAmount
+            // -x*y                 -x*y
+            // +X*outputAmount      +x*outputAmount
+            // x*outputAmount = Dx*y  -  Dx*outputAmount
+            // inputReserves*outputAmount = inputAmount(outputReserves - outputAmount)
+            // inputReserves * outputAmount / (outputReserves - outputAmount) = inputAmount;
+            // q why inputReserves * outputAmount has to be multiply by 10000
+            // q why outputReserves * outputAmount has to be multiply by 997
+            // 10000 & 997 is fees
             ((inputReserves * outputAmount) * 10000) /
             ((outputReserves - outputAmount) * 997);
     }
@@ -334,6 +348,7 @@ contract TSwapPool is ERC20 {
      * @param inputToken ERC20 token to pull from caller
      * @param outputToken ERC20 token to send to caller
      * @param outputAmount The exact amount of tokens to send to caller
+     * @audit-info missing deadline param in natspec (deadline)
      */
     function swapExactOutput(
         IERC20 inputToken,
@@ -429,6 +444,7 @@ contract TSwapPool is ERC20 {
     ) public view returns (uint256) {
         uint256 poolTokenReserves = i_poolToken.balanceOf(address(this));
         uint256 wethReserves = i_wethToken.balanceOf(address(this));
+        // (Dy * X) / Y = Dx; (D = delta = token changes/addition)
         return (wethToDeposit * poolTokenReserves) / wethReserves;
     }
 

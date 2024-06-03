@@ -5,9 +5,12 @@ libs = ["lib"]
 solc = "0.8.20"
 remappings = ['@openzeppelin/contracts=lib/openzeppelin-contracts/contracts']
 
+[fuzz]
+seed = '0x1'
+
 [invariant]
-runs = 256
-depth = 32
+runs = 256 # The number of runs that must execute for each invariant test group.
+depth = 32 # The number of calls executed to attempt to break invariants in one run.
 fail_on_revert = true
 
 [fmt]
