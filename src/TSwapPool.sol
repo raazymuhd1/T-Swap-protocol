@@ -290,7 +290,7 @@ contract TSwapPool is ERC20 {
         // totalPoolTokensOfPool) + (wethToDeposit * poolTokensToDeposit) = k
         // (totalWethOfPool * totalPoolTokensOfPool) + (wethToDeposit * totalPoolTokensOfPool) = k - (totalWethOfPool *
         // poolTokensToDeposit) - (wethToDeposit * poolTokensToDeposit)
-        // @audit-info magic number ( 997, 1000 ), add to a variable
+        // @audit-written magic number ( 997, 1000 ), add to a variable
         // 0.03% fee
         uint256 inputAmountMinusFee = inputAmount * 997;
         uint256 numerator = inputAmountMinusFee * outputReserves;
@@ -324,17 +324,17 @@ contract TSwapPool is ERC20 {
             // q why inputReserves * outputAmount has to be multiply by 10000
             // q why outputReserves * outputAmount has to be multiply by 997
             // 10000 & 997 is fees
-            // @audit-info magic number
+            // @audit-written magic number
             // 997 / 10_000
             // 91.3% fee ??
-            // @audit-high
+            // @audit-written
             // IMPACT: HIGH => users are charged way too much fees
             // Likelihood: HIGH => swapExactOutput is one of the main swapping functions!!
             ((inputReserves * outputAmount) * 10000) /
             ((outputReserves - outputAmount) * 997);
     }
 
-    // @audit-info where is the natspec?
+    // @audit-written where is the natspec?
     function swapExactInput(
         IERC20 inputToken,
         uint256 inputAmount,
@@ -342,11 +342,11 @@ contract TSwapPool is ERC20 {
         uint256 minOutputAmount,
         uint64 deadline
     )
-         // @audit-info this should be external
+         // @audit-written this should be external
         public
         revertIfZero(inputAmount)
         revertIfDeadlinePassed(deadline)
-        // @audit-low
+        // @audit-written
         // IMPACT: SUPER LOW - protocol is giving the wrong return
         // LIKELIHOOD: HIGH - always the case
         returns (uint256 output)
@@ -377,12 +377,13 @@ contract TSwapPool is ERC20 {
      * @param inputToken ERC20 token to pull from caller
      * @param outputToken ERC20 token to send to caller
      * @param outputAmount The exact amount of tokens to send to caller
-     * @audit-info missing deadline param in natspec (deadline)
+     * @audit-written missing deadline param in natspec (deadline)
      */
     function swapExactOutput(
         IERC20 inputToken,
         IERC20 outputToken,
         uint256 outputAmount,
+        // @audit-written need a maxInputAmount param here for slippage protection
         uint64 deadline
     )
         public
@@ -401,7 +402,12 @@ contract TSwapPool is ERC20 {
 
         // no slippage protection
         // send the transaction, but the pool get a massive transaction that changes the price
-        // @audit-info need a max input amount
+        // @audit-written need a max input amount
+        // MEV attack
+
+        // IMPACT: HIGH => user may get a WAY worse swap
+        // LIKELIHOOD: Medium/High => 
+        // HIGH
 
         _swap(inputToken, inputAmount, outputToken, outputAmount);
     }
@@ -415,7 +421,7 @@ contract TSwapPool is ERC20 {
         uint256 poolTokenAmount
     ) external returns (uint256 wethAmount) {
         // pool token => input
-        // @audit this is wrong
+        // @audit-written this is wrong
         // it should be swapExactInput(minWethToReceive)
         return
             swapExactOutput(
@@ -448,6 +454,7 @@ contract TSwapPool is ERC20 {
             revert TSwapPool__InvalidToken();
         }
 
+        // @audit-written
         swap_count++;
         if (swap_count >= SWAP_COUNT_MAX) {
             swap_count = 0;
@@ -485,7 +492,7 @@ contract TSwapPool is ERC20 {
     }
 
     /// @notice a more verbose way of getting the total supply of liquidity tokens
-    // @audit-info this should be external function
+    // @audit-written this should be external function
         function totalLiquidityTokenSupply() public view returns (uint256) {
         return totalSupply();
     }

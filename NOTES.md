@@ -6,6 +6,8 @@
 ## Makefile Docs
     - [Makefile Docs](https://makefiletutorial.com/)
 
+## How to generate report.md to report.pdf file
+ - run this command `pandoc file-path -o fileOutput.pdf --from markdown --template=eisvogel --listings`
 
 ## Invariants ( also known as stateful fuzzing )
   - `stateful` fuzzing is where the final state of your previous run on the same function is the starting state of your next run ( basically it will use the same contract, not started from scratch like stateless fuzz ). 
