@@ -51,3 +51,10 @@
 
  ## About Product Formula ( at 11.01 )
   - need to re-watch to fully understand it.
+
+
+
+ ## Multiple ways todo manual reviews
+ - using slither library by running `slither .`
+ - using `solidity` compiler by running `forge build` or `forge compile` to compile the code
+ - using `Aderyn` library from `cyfrin updraft` team. 
